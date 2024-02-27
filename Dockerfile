@@ -3,7 +3,7 @@ ARG CADDY_VERSION=2.7.6
 FROM caddy:${CADDY_VERSION}-alpine
 
 ARG TARGETARCH
-ARG TARGETBRANCH
+ARG TARGETVARIANT
 
 ARG BUILD_TIME
 ARG WEBPROC_VERSION=0.4.0
@@ -28,13 +28,13 @@ RUN set -eux  && \
 		amd64)  curl -sL $WEBPROC_URL_AMD64 | gzip -d - > /usr/local/bin/webproc   ;; \
 		arm64)  curl -sL $WEBPROC_URL_ARM64 | gzip -d - > /usr/local/bin/webproc   ;; \
         arm) \
-            case "${TARGETBRANCH}" in \
+            case "${TARGETVARIANT}" in \
                 v6)   curl -sL $WEBPROC_URL_ARMv6 | gzip -d - > /usr/local/bin/webproc   ;; \
                 v7)   curl -sL $WEBPROC_URL_ARMv7 | gzip -d - > /usr/local/bin/webproc   ;; \
                 v8)   curl -sL $WEBPROC_URL_ARM64 | gzip -d - > /usr/local/bin/webproc   ;; \
-                *) echo >&2 "error: unsupported architecture (${TARGETARCH}/${TARGETBRANCH})"; exit 1 ;; \
+                *) echo >&2 "error: unsupported architecture (${TARGETARCH}/${TARGETVARIANT})"; exit 1 ;; \
             esac;  ;; \
-		*) echo >&2 "error: unsupported architecture (${TARGETARCH}/${TARGETBRANCH})"; exit 1 ;; \
+		*) echo >&2 "error: unsupported architecture (${TARGETARCH}/${TARGETVARIANT})"; exit 1 ;; \
     esac  && \
 	chmod +x /usr/local/bin/webproc  
 
