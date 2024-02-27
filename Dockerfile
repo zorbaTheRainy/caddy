@@ -44,4 +44,4 @@ EXPOSE 80 443 443/udp 2019
 WORKDIR /srv
 
 # launch webproc, which in turn launches caddy
-ENTRYPOINT ["webproc","--configuration-file","/etc/caddy/Caddyfile","--","caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile""]
+ENTRYPOINT ["webproc","--configuration-file","/etc/caddy/Caddyfile","--","caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
