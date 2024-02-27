@@ -1,0 +1,3 @@
+example.com {
+    proxy / localhost:3000
+}
