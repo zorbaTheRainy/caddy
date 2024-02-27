@@ -45,7 +45,7 @@ jobs:
         push: true
         platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy_webproc:${{ steps.release.outputs.CADDY_VERSION }}-alpine
+          ${{ secrets.DOCKERHUB_USERNAME }}/caddy_webproc:${{steps.release.outputs.CADDY_VERSION}}-alpine
           ${{ secrets.DOCKERHUB_USERNAME }}/caddy_webproc:latest
         build-args: |
           CADDY_VERSION=${{ steps.release.outputs.CADDY_VERSION }}
