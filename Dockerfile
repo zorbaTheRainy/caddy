@@ -38,10 +38,10 @@ RUN set -eux  && \
     esac  && \
 	chmod +x /usr/local/bin/webproc  
 
-EXPOSE 8080
+EXPOSE 8081
 EXPOSE 80 443 443/udp 2019
 
 WORKDIR /srv
 
 # launch webproc, which in turn launches caddy
-ENTRYPOINT ["webproc","--configuration-file","/etc/caddy/Caddyfile","--","caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+ENTRYPOINT ["webproc","--port","8081","--configuration-file","/etc/caddy/Caddyfile","--","caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
