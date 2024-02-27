@@ -19,6 +19,10 @@ Per the instrucitons below, you'll be able to easily edit the Caddyfile and then
 
 Visit [http://localhost:8080](http://localhost:8080) and view the process configuration, status and logs.
 
+Belwo is an image of webproc running DNSmasq
+
+You'll notice the screen is split in 2.  One half shows an edittable veriosn of the config file (Caddyfile), the other STDOUT/STDERR.
+
 <img width="747" alt="screen shot 2016-09-22 at 1 39 01 am" src="https://cloud.githubusercontent.com/assets/633843/18718069/7d515392-8065-11e6-8ba5-86b6e59f3992.png">
 
 ## Docker Compose file
