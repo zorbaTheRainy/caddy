@@ -22,8 +22,8 @@ jobs:
     - name: Get release tag
       id: release
       run: |
-        buildTag=$(date +%Y-%m-%d-%H-%M)
-        echo "GH_TAG=$buildTag" >> $GITHUB_OUTPUT
+        caddyVersion="2.7.6"
+        echo "CADDY_VERSION=$caddyVersion " >> $GITHUB_OUTPUT
 
     - name: Login to DockerHub
       uses: docker/login-action@v3 
@@ -45,8 +45,8 @@ jobs:
         push: true
         platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.repository.name }}:${{ steps.release.outputs.GH_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.repository.name }}:${{ steps.release.outputs.CADDY_VERSION }}
           ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.repository.name }}:latest
         build-args: |
-          CADDY_VERSION="2.7.6"
+          CADDY_VERSION=${{ steps.release.outputs.CADDY_VERSION }}
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
