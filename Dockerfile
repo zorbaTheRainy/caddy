@@ -13,6 +13,6 @@ RUN xcaddy build \
     --with github.com/caddyserver/transform-encoder \
     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-FROM caddy:${CADDY_VERSION}-alpine
+FROM caddy:${CADDY_VERSION}
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
