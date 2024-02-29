@@ -48,8 +48,8 @@ jobs:
         # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
         platforms: linux/arm64
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy_webproc:${{steps.release.outputs.CADDY_TAG}}
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy_webproc:latest
+          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{steps.release.outputs.CADDY_TAG}}
+          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:latest
         build-args: |
           CADDY_VERSION=${{ steps.release.outputs.CADDY_VERSION }}
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
