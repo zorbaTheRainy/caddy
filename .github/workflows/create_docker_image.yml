@@ -24,8 +24,8 @@ jobs:
       run: |
         caddyVersion="2.7.6"
         echo "CADDY_VERSION=$caddyVersion " >> $GITHUB_OUTPUT
-        # caddyTag="${caddyVersion}-alpine"
-        caddyTag="${caddyVersion}"
+        caddyTag="${caddyVersion}-alpine"
+        # caddyTag="${caddyVersion}"
         echo "CADDY_TAG=$caddyTag " >> $GITHUB_OUTPUT
 
     - name: Login to DockerHub
@@ -46,8 +46,8 @@ jobs:
       with:
         context: .
         push: true
-        # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
-        platforms: linux/arm64
+        platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
+        # platforms: linux/arm64
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{steps.release.outputs.CADDY_TAG}}
           ${{ secrets.DOCKERHUB_USERNAME }}/caddy:latest
