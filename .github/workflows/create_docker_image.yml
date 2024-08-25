@@ -22,7 +22,7 @@ jobs:
     - name: Get release tag
       id: release
       run: |
-        caddyVersion="2.8.1"
+        caddyVersion="2.8.4"
         echo "CADDY_VERSION=$caddyVersion " >> $GITHUB_OUTPUT
         caddyTag="${caddyVersion}-alpine"
         # caddyTag="${caddyVersion}"
