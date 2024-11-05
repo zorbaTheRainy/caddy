@@ -2,12 +2,26 @@ name: Docker Image CI
 
 on:
   workflow_dispatch:
-
+    inputs:
+      image_purpose:
+        description: 'Purpose of the image'
+        required: true
+        type: choice
+        options:
+          - testing
+          - production
+          caddy_version:
+            description: 'Version of Caddy to build from'
+            required: true
+            default: '2.8.4'
+          extra_tag:
+            description: 'Tag to append to the verison number'
+            required: true
+            default: ''
+          
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -17,16 +31,21 @@ jobs:
       run: |
         buildTime=$(date +%Y-%m-%d" "%X)
         echo "BUILD_TIME=$buildTime" >> $GITHUB_OUTPUT
-        # echo "::set-output name=output::$DATE"
 
     - name: Get release tag
       id: release
       run: |
-        caddyVersion="2.8.4"
-        echo "CADDY_VERSION=$caddyVersion " >> $GITHUB_OUTPUT
-        caddyTag="${caddyVersion}-alpine"
-        # caddyTag="${caddyVersion}"
-        echo "CADDY_TAG=$caddyTag " >> $GITHUB_OUTPUT
+        if [ "${{ github.event.inputs.image_purpose }}" == "testing" ]; then
+          buildTag=$(date +%Y-%m-%d-%H-%M)
+          echo "GH_BUILD_TAG=$buildTag" >> $GITHUB_OUTPUT
+          echo "GH_LATEST_TAG=testing" >> $GITHUB_OUTPUT
+        elif [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
+          echo "GH_BUILD_TAG=${{ github.event.inputs.caddy_version }}-alpine-${{ github.event.inputs.extra_tag }}" >> $GITHUB_OUTPUT
+          echo "GH_LATEST_TAG=latest" >> $GITHUB_OUTPUT
+        else
+          echo "Invalid base image specified" >&2
+          exit 1
+        fi
 
     - name: Login to DockerHub
       uses: docker/login-action@v3 
@@ -49,8 +68,8 @@ jobs:
         platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
         # platforms: linux/arm64
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{steps.release.outputs.CADDY_TAG}}
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:latest
+          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.release.outputs.GH_BUILD_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_LATEST_TAG }}
         build-args: |
-          CADDY_VERSION=${{ steps.release.outputs.CADDY_VERSION }}
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
+          CADDY_VERSION=${{ github.event.inputs.caddy_version }}
