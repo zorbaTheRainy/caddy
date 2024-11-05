@@ -10,14 +10,14 @@ on:
         options:
           - testing
           - production
-          caddy_version:
-            description: 'Version of Caddy to build from'
-            required: true
-            default: '2.8.4'
-          extra_tag:
-            description: 'Tag to append to the verison number'
-            required: true
-            default: ''
+      caddy_version:
+        description: 'Version of Caddy to build from'
+        required: true
+        default: '2.8.4'
+      extra_tag:
+        description: 'Tag to append to the verison number'
+        required: true
+        default: ''
           
 jobs:
   build:
