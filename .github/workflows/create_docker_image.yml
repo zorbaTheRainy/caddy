@@ -17,7 +17,7 @@ on:
       extra_tag:
         description: 'Tag to append to the verison number'
         required: true
-        default: ''
+        default: '8'
           
 jobs:
   build:

@@ -25,7 +25,8 @@ FROM caddy:${CADDY_VERSION}-builder AS builder
 # [07] https://github.com/hairyhenderson/caddy-teapot-module
 		# http.handlers.teapot
 ### Not used
-# https://github.com/mholt/caddy-l4
+# [08] https://github.com/mholt/caddy-l4
+# [09] https://github.com/tailscale/caddy-tailscale
 
 RUN xcaddy build \
     --with github.com/caddy-dns/cloudflare \
@@ -35,7 +36,7 @@ RUN xcaddy build \
     --with github.com/hslatman/caddy-crowdsec-bouncer \
     --with github.com/corazawaf/coraza-caddy \
     --with github.com/mholt/caddy-l4 \
-#    --with github.com/hslatman/caddy-crowdsec-bouncer \
+    --with github.com/tailscale/caddy-tailscale \
 #    --with github.com/hslatman/caddy-crowdsec-bouncer \
 #    --with github.com/hslatman/caddy-crowdsec-bouncer \
     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
