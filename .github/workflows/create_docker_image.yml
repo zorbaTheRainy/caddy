@@ -65,14 +65,14 @@ jobs:
         EXTRA_TAG: ""
       run: |
         if [ "${{ github.event.inputs.is_cloudflare_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare  \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare"
           CADDY_STR="$CADDY_STR     --with github.com/WeidiDeng/caddy-cloudflare-ip"
           EXTRA_TAG="${EXTRA_TAG}11"
         else
           EXTRA_TAG="${EXTRA_TAG}00"
         fi
         if [ "${{ github.event.inputs.is_geoip_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2 \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
@@ -85,25 +85,25 @@ jobs:
         fi
         EXTRA_TAG="${EXTRA_TAG}-"
         if [ "${{ github.event.inputs.is_crowdsec_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_waf_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/corazawaf/coraza-caddy \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/corazawaf/coraza-caddy"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_layer4_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/mholt/caddy-l4 \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/mholt/caddy-l4"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_tailscale_machine_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
@@ -158,7 +158,7 @@ jobs:
         push: true
         # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
         # platforms: linux/arm64
-        platforms: ${{ steps.platforms.outputs.PLATFORMS }}
+        platforms: ${{ steps.docker_build_vars.outputs.PLATFORMS }}
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.docker_build_vars.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_BUILD_TAG }}
           ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.docker_build_vars.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_LATEST_TAG }}
