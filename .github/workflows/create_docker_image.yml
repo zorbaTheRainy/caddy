@@ -65,8 +65,8 @@ jobs:
         EXTRA_TAG: ""
       run: |
         if [ "${{ github.event.inputs.is_cloudflare_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare \ \n"
-          CADDY_STR="$CADDY_STR     ----with github.com/WeidiDeng/caddy-cloudflare-ip \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare"
+          CADDY_STR="$CADDY_STR     ----with github.com/WeidiDeng/caddy-cloudflare-ip"
           EXTRA_TAG="${EXTRA_TAG}11"
         else
           EXTRA_TAG="${EXTRA_TAG}00"
@@ -78,7 +78,7 @@ jobs:
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_logging_template_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/caddyserver/transform-encoder \ \n"
+          CADDY_STR="$CADDY_STR     --with github.com/caddyserver/transform-encoder "
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
@@ -158,7 +158,7 @@ jobs:
         push: true
         # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
         # platforms: linux/arm64
-        platforms: ${{ steps.docker_build_vars.outputs.PLATFORMS }}
+        platforms: ${{ steps.platforms.outputs.PLATFORMS }}
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.docker_build_vars.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_BUILD_TAG }}
           ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.docker_build_vars.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_LATEST_TAG }}
