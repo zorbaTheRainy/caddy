@@ -65,8 +65,8 @@ jobs:
         EXTRA_TAG: ""
       run: |
         if [ "${{ github.event.inputs.is_cloudflare_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare \\n"
-          CADDY_STR="$CADDY_STR     --with github.com/WeidiDeng/caddy-cloudflare-ip \\n"
+          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare"
+          CADDY_STR="$CADDY_STR     --with github.com/WeidiDeng/caddy-cloudflare-ip"
           EXTRA_TAG="11${EXTRA_TAG}"
         else
           EXTRA_TAG="00${EXTRA_TAG}"
@@ -109,6 +109,10 @@ jobs:
           EXTRA_TAG="0${EXTRA_TAG}"
         fi
         CADDY_STR="$CADDY_STR     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
+        
+        XCADDY_LABEL=$(echo "${CADDY_STR}" | sed 's/\\w+--with/\\n --with/g'
+        XCADDY_LABEL="xcaddy build \\n${XCADDY_LABEL}"
+        echo "XCADDY_LABEL=$XCADDY_LABEL" >> $GITHUB_OUTPUT
         echo "XCADDY_STR=$CADDY_STR" >> $GITHUB_OUTPUT
         echo "extra_tag=$EXTRA_TAG" >> $GITHUB_OUTPUT
   
@@ -166,3 +170,4 @@ jobs:
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
           CADDY_VERSION=${{ github.event.inputs.caddy_version }}
           XCADDY_STRING=${{ steps.xcaddy.outputs.XCADDY_STR }}
+          XCADDY_LABEL=${{ steps.xcaddy.outputs.XCADDY_LABEL }}

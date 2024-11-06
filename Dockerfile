@@ -53,5 +53,7 @@ RUN \
 COPY  support_files/.bashrc /root/.bashrc
 
 ARG BUILD_TIME
+ARG XCADDY_LABEL
 LABEL release-date=${BUILD_TIME}
 LABEL source="https://github.com/zorbaTheRainy/caddy"
+LABEL xcaddy_cmd=${XCADDY_LABEL}
