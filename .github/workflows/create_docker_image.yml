@@ -134,6 +134,8 @@ jobs:
         else
           echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
         fi
+        REPOSITORY=${GITHUB_REPOSITORY##*/}
+        echo "REPOSITORY_NAME=$REPOSITORY" >> $GITHUB_OUTPUT
   
     - name: Login to DockerHub
       uses: docker/login-action@v3 
@@ -157,8 +159,8 @@ jobs:
         # platforms: linux/arm64
         platforms: ${{ steps.platforms.outputs.PLATFORMS }}
         tags: |
-          ${GITHUB_REPOSITORY}:${{ steps.tag.outputs.GH_BUILD_TAG }}
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_LATEST_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_BUILD_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.platforms.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_LATEST_TAG }}
         build-args: |
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
           CADDY_VERSION=${{ github.event.inputs.caddy_version }}
