@@ -65,12 +65,8 @@ jobs:
         EXTRA_TAG: ""
       run: |
         if [ "${{ github.event.inputs.is_cloudflare_support }}" == 'true' ]; then
-          # [01] https://github.com/caddy-dns/cloudflare
-              # dns.providers.cloudflare
-          # [02] https://github.com/WeidiDeng/caddy-cloudflare-ip
-              # http.ip_sources.cloudflare
-          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare"
-          CADDY_STR="$CADDY_STR     --with github.com/WeidiDeng/caddy-cloudflare-ip"
+          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare \\n"
+          CADDY_STR="$CADDY_STR     --with github.com/WeidiDeng/caddy-cloudflare-ip \\n"
           EXTRA_TAG="11${EXTRA_TAG}"
         else
           EXTRA_TAG="00${EXTRA_TAG}"
