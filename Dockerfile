@@ -7,6 +7,8 @@ FROM caddy:${CADDY_VERSION}-builder AS builder
 # ------------------------------------------------------------------
 # Modules required
 # ------------------------------------------------------------------
+# [__] https://github.com/hairyhenderson/caddy-teapot-module
+		# http.handlers.teapot
 # [01] https://github.com/caddy-dns/cloudflare
 		# dns.providers.cloudflare
 # [02] https://github.com/WeidiDeng/caddy-cloudflare-ip
@@ -23,27 +25,18 @@ FROM caddy:${CADDY_VERSION}-builder AS builder
 		# layer4.matchers.crowdsec
 # [06] https://github.com/corazawaf/coraza-caddy
 		# http.handlers.waf 
-# [07] https://github.com/hairyhenderson/caddy-teapot-module
-		# http.handlers.teapot
 ### Not used
 # [08] https://github.com/mholt/caddy-l4
 # [09] https://github.com/tailscale/caddy-tailscale
 
 # RUN xcaddy build \
 #     --with github.com/caddy-dns/cloudflare \
-#     --with github.com/WeidiDeng/caddy-cloudflare-ip \
-#     --with github.com/zhangjiayin/caddy-geoip2 \
-#     --with github.com/caddyserver/transform-encoder \
-#     --with github.com/hslatman/caddy-crowdsec-bouncer \
-#     --with github.com/corazawaf/coraza-caddy \
-#     --with github.com/mholt/caddy-l4 \
-#     --with github.com/tailscale/caddy-tailscale \
-# #    --with github.com/hslatman/caddy-crowdsec-bouncer \
-# #    --with github.com/hslatman/caddy-crowdsec-bouncer \
 #     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
 ARG XCADDY_STRING
 RUN xcaddy build ${XCADDY_STRING}
+# caddy list-modules --packages --versions
+
 
 # --------------------------------------------------------
 
