@@ -18,6 +18,7 @@ on:
         description: 'add Cloudflare support?' 
         required: true 
         type: boolean
+        default: true
       is_geoip_support: 
         description: 'add GeoIP support?' 
         required: true 
@@ -26,6 +27,7 @@ on:
           description: 'add logging file templating support?' 
           required: true 
           type: boolean
+          default: true
       is_crowdsec_support: 
         description: 'add CrowdSec support?' 
         required: true 
@@ -62,44 +64,44 @@ jobs:
         $CADDY_STR = ""
         $EXTRA_TAG = ""
         if [ "${{ github.event.inputs.is_cloudflare_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/caddy-dns/cloudflare \"
-          $CADDY_STR = "$CADDY_STR     ----with github.com/WeidiDeng/caddy-cloudflare-ip \"
+          $CADDY_STR = "$CADDY_STR     --with github.com/caddy-dns/cloudflare \ \n"
+          $CADDY_STR = "$CADDY_STR     ----with github.com/WeidiDeng/caddy-cloudflare-ip \ \n"
           $EXTRA_TAG = "${EXTRA_TAG}11"
         else
           $EXTRA_TAG = "${EXTRA_TAG}00"
         fi
         if [ "${{ github.event.inputs.is_geoip_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2 \"
+          $CADDY_STR = "$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2 \ \n"
           $EXTRA_TAG = "${EXTRA_TAG}1"
         else
           $EXTRA_TAG = "${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_logging_template_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/caddyserver/transform-encoder \"
+          $CADDY_STR = "$CADDY_STR     --with github.com/caddyserver/transform-encoder \ \n"
           $EXTRA_TAG = "${EXTRA_TAG}1"
         else
           $EXTRA_TAG = "${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_crowdsec_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \"
+          $CADDY_STR = "$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \ \n"
           $EXTRA_TAG = "${EXTRA_TAG}1"
         else
           $EXTRA_TAG = "${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_waf_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/corazawaf/coraza-caddy \"
+          $CADDY_STR = "$CADDY_STR     --with github.com/corazawaf/coraza-caddy \ \n"
           $EXTRA_TAG = "${EXTRA_TAG}1"
         else
           $EXTRA_TAG = "${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_layer4_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/mholt/caddy-l4 \"
+          $CADDY_STR = "$CADDY_STR     --with github.com/mholt/caddy-l4 \ \n"
           $EXTRA_TAG = "${EXTRA_TAG}1"
         else
           $EXTRA_TAG = "${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_tailscale_machine_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/tailscale/caddy-tailscale \"
+          $CADDY_STR = "$CADDY_STR     --with github.com/tailscale/caddy-tailscale \ \n"
           $EXTRA_TAG = "${EXTRA_TAG}1"
         else
           $EXTRA_TAG = "${EXTRA_TAG}0"
