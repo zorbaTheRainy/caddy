@@ -60,21 +60,22 @@ jobs:
 
     - name: Create the `xcaddy build ` string
       id: xcaddy
+      env:
+        CADDY_STR: ""
+        EXTRA_TAG: ""
       run: |
-        CADDY_STR=""
-        EXTRA_TAG=""
         if [ "${{ github.event.inputs.is_cloudflare_support }}" == 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/caddy-dns/cloudflare \ \n"
-          $CADDY_STR = "$CADDY_STR     ----with github.com/WeidiDeng/caddy-cloudflare-ip \ \n"
-          $EXTRA_TAG = "${EXTRA_TAG}11"
+          $CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare \ \n"
+          $CADDY_STR="$CADDY_STR     ----with github.com/WeidiDeng/caddy-cloudflare-ip \ \n"
+          $EXTRA_TAG="${EXTRA_TAG}11"
         else
-          $EXTRA_TAG = "${EXTRA_TAG}00"
+          $EXTRA_TAG="${EXTRA_TAG}00"
         fi
         if [ "${{ github.event.inputs.is_geoip_support }}" = 'true' ]; then
-          $CADDY_STR = "$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2 \ \n"
-          $EXTRA_TAG = "${EXTRA_TAG}1"
+          $CADDY_STR="$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2 \ \n"
+          $EXTRA_TAG="${EXTRA_TAG}1"
         else
-          $EXTRA_TAG = "${EXTRA_TAG}0"
+          $EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_logging_template_support }}" = 'true' ]; then
           $CADDY_STR = "$CADDY_STR     --with github.com/caddyserver/transform-encoder \ \n"
