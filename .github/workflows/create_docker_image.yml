@@ -108,7 +108,7 @@ jobs:
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
-        CADDY_STR="$CADDY_STR     --github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
+        CADDY_STR="$CADDY_STR     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
         echo "XCADDY_STR=$CADDY_STR" >> $GITHUB_OUTPUT
         echo "extra_tag=$EXTRA_TAG" >> $GITHUB_OUTPUT
   
