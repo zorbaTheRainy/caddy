@@ -65,7 +65,7 @@ jobs:
         EXTRA_TAG: ""
       run: |
         if [ "${{ github.event.inputs.is_cloudflare_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare"
+          CADDY_STR="$CADDY_STR     --with github.com/caddy-dns/cloudflare  \ \n"
           CADDY_STR="$CADDY_STR     --with github.com/WeidiDeng/caddy-cloudflare-ip"
           EXTRA_TAG="${EXTRA_TAG}11"
         else
