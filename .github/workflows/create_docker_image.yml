@@ -71,37 +71,37 @@ jobs:
         else
           EXTRA_TAG="${EXTRA_TAG}00"
         fi
-        if [ "${{ github.event.inputs.is_geoip_support }}" = 'true' ]; then
+        if [ "${{ github.event.inputs.is_geoip_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2 \ \n"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
-        if [ "${{ github.event.inputs.is_logging_template_support }}" = 'true' ]; then
+        if [ "${{ github.event.inputs.is_logging_template_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/caddyserver/transform-encoder \ \n"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
-        if [ "${{ github.event.inputs.is_crowdsec_support }}" = 'true' ]; then
+        if [ "${{ github.event.inputs.is_crowdsec_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \ \n"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
-        if [ "${{ github.event.inputs.is_waf_support }}" = 'true' ]; then
+        if [ "${{ github.event.inputs.is_waf_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/corazawaf/coraza-caddy \ \n"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
-        if [ "${{ github.event.inputs.is_layer4_support }}" = 'true' ]; then
+        if [ "${{ github.event.inputs.is_layer4_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/mholt/caddy-l4 \ \n"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
-        if [ "${{ github.event.inputs.is_tailscale_machine_support }}" = 'true' ]; then
+        if [ "${{ github.event.inputs.is_tailscale_machine_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale \ \n"
           EXTRA_TAG="${EXTRA_TAG}1"
         else
@@ -116,14 +116,23 @@ jobs:
       run: |
         if [ "${{ github.event.inputs.image_purpose }}" == "testing" ]; then
           buildTag=$(date +%Y-%m-%d-%H-%M)
-          echo "GH_BUILD_TAG=$buildTag" >> $GITHUB_OUTPUT
+          echo "GH_BUILD_TAG=${{ steps.xcaddy.outputs.extra_tag }}-${buildTag}" >> $GITHUB_OUTPUT
           echo "GH_LATEST_TAG=testing" >> $GITHUB_OUTPUT
         elif [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
           echo "GH_BUILD_TAG=${{ github.event.inputs.caddy_version }}-alpine-${{ steps.xcaddy.outputs.extra_tag }}" >> $GITHUB_OUTPUT
           echo "GH_LATEST_TAG=latest" >> $GITHUB_OUTPUT
         else
-          echo "Invalid base image specified" >&2
+          echo "Invalid image purpose specified" >&2
           exit 1
+        fi
+  
+    - name: Set platform var
+      id: platforms
+      run: |
+        if [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
+          echo "PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6" >> $GITHUB_OUTPUT
+        else
+          echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
         fi
   
     - name: Login to DockerHub
@@ -145,9 +154,10 @@ jobs:
         context: .
         push: true
         # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
-        platforms: linux/arm64
+        # platforms: linux/arm64
+        platforms: ${{ steps.platforms.outputs.PLATFORMS }}
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_BUILD_TAG }}
+          ${GITHUB_REPOSITORY}:${{ steps.tag.outputs.GH_BUILD_TAG }}
           ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_LATEST_TAG }}
         build-args: |
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
