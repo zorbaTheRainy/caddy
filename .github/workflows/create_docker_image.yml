@@ -77,40 +77,40 @@ jobs:
         fi
         if [ "${{ github.event.inputs.is_geoip_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2"
-          EXTRA_TAG="$1{EXTRA_TAG}"
+          EXTRA_TAG="1${EXTRA_TAG}"
         else
-          EXTRA_TAG="$0{EXTRA_TAG}"
+          EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_logging_template_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/caddyserver/transform-encoder "
-          EXTRA_TAG="$1{EXTRA_TAG}"
+          EXTRA_TAG="1${EXTRA_TAG}"
         else
-          EXTRA_TAG="$0{EXTRA_TAG}"
+          EXTRA_TAG="0${EXTRA_TAG}"
         fi
-        EXTRA_TAG="${EXTRA_TAG}-"
+        EXTRA_TAG="-${EXTRA_TAG}"
         if [ "${{ github.event.inputs.is_crowdsec_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer"
-          EXTRA_TAG="$1{EXTRA_TAG}"
+          EXTRA_TAG="1${EXTRA_TAG}"
         else
-          EXTRA_TAG="$0{EXTRA_TAG}"
+          EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_waf_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/corazawaf/coraza-caddy"
-          EXTRA_TAG="$1{EXTRA_TAG}"
+          EXTRA_TAG="1${EXTRA_TAG}"
         else
-          EXTRA_TAG="$0{EXTRA_TAG}"
+          EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_layer4_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/mholt/caddy-l4"
-          EXTRA_TAG="$1{EXTRA_TAG}"
+          EXTRA_TAG="1${EXTRA_TAG}"
         else
-          EXTRA_TAG="$0{EXTRA_TAG}"
+          EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_tailscale_machine_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale"
-          EXTRA_TAG="$1{EXTRA_TAG}"
+          EXTRA_TAG="1${EXTRA_TAG}"
         else
-          EXTRA_TAG="$0{EXTRA_TAG}"
+          EXTRA_TAG="0${EXTRA_TAG}"
         fi
         CADDY_STR="$CADDY_STR     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
         echo "XCADDY_STR=$CADDY_STR" >> $GITHUB_OUTPUT
