@@ -42,6 +42,7 @@ FROM caddy:${CADDY_VERSION}-builder AS builder
 # #    --with github.com/hslatman/caddy-crowdsec-bouncer \
 #     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
+ARG XCADDY_STRING
 RUN xcaddy build ${XCADDY_STRING}
 
 # --------------------------------------------------------
@@ -57,5 +58,7 @@ RUN \
 	bash \
 	curl 
 COPY  support_files/.bashrc /root/.bashrc
+
+ARG BUILD_TIME
 LABEL release-date=${BUILD_TIME}
 LABEL source="https://github.com/zorbaTheRainy/caddy"
