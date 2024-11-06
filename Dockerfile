@@ -5,7 +5,8 @@ ARG XCADDY_STRING
 FROM caddy:${CADDY_VERSION}-builder AS builder
 
 # ------------------------------------------------------------------
-# Modules required
+# Modules provided
+# Bitflag in tag read right-to-left (i.e.,  8765-4321, 0000-1011)
 # ------------------------------------------------------------------
 # [__] https://github.com/hairyhenderson/caddy-teapot-module
 		# http.handlers.teapot
@@ -25,9 +26,15 @@ FROM caddy:${CADDY_VERSION}-builder AS builder
 		# layer4.matchers.crowdsec
 # [06] https://github.com/corazawaf/coraza-caddy
 		# http.handlers.waf 
-### Not used
-# [08] https://github.com/mholt/caddy-l4
-# [09] https://github.com/tailscale/caddy-tailscale
+# [07] https://github.com/mholt/caddy-l4
+		# layer4.handlers.*
+		# layer4.matchers.*
+		# layer4.proxy.*
+		# tls.handshake_match.alpn
+# [08] https://github.com/tailscale/caddy-tailscale
+		# http.authentication.providers.tailscale
+		# http.reverse_proxy.transport.tailscale
+		# tailscale
 
 # RUN xcaddy build \
 #     --with github.com/caddy-dns/cloudflare \

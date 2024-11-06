@@ -58,7 +58,7 @@ jobs:
         buildTime=$(date +%Y-%m-%d" "%X)
         echo "BUILD_TIME=$buildTime" >> $GITHUB_OUTPUT
 
-    - name: Create the `xcaddy build ` string
+    - name: Create the `xcaddy build` string
       id: xcaddy
       env:
         CADDY_STR: ""
@@ -110,8 +110,7 @@ jobs:
         fi
         CADDY_STR="$CADDY_STR     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
         
-        XCADDY_LABEL=$(echo "${CADDY_STR}" | sed 's/\w+--with/\\n --with/g')
-        XCADDY_LABEL="xcaddy build \\n${XCADDY_LABEL}"
+        XCADDY_LABEL="xcaddy build ${CADDY_STR}"
         echo "XCADDY_LABEL=$XCADDY_LABEL" >> $GITHUB_OUTPUT
         echo "XCADDY_STR=$CADDY_STR" >> $GITHUB_OUTPUT
         echo "extra_tag=$EXTRA_TAG" >> $GITHUB_OUTPUT
