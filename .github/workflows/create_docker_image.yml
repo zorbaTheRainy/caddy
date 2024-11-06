@@ -18,6 +18,17 @@ on:
         description: 'Tag to append to the verison number'
         required: true
         default: '8'
+      run_tests: 
+        description: 'Run tests' 
+        required: true 
+        type: boolean
+      option1: 
+        description: 'Option 1' 
+        required: true 
+        type: choice 
+        options: 
+          - Yes 
+          - No
           
 jobs:
   build:
