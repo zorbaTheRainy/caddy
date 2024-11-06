@@ -48,7 +48,7 @@ RUN xcaddy build \
 # --------------------------------------------------------
 
 # there is only alpine and windows based images.
-FROM caddy:${CADDY_IMAGE}-alpine 
+FROM caddy:${CADDY_VERSION}-alpine 
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
