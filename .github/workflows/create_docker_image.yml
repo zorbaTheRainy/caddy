@@ -78,36 +78,36 @@ jobs:
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_logging_template_support }}" = 'true' ]; then
-          CADDY_STR = "$CADDY_STR     --with github.com/caddyserver/transform-encoder \ \n"
-          EXTRA_TAG = "${EXTRA_TAG}1"
+          CADDY_STR="$CADDY_STR     --with github.com/caddyserver/transform-encoder \ \n"
+          EXTRA_TAG="${EXTRA_TAG}1"
         else
-          EXTRA_TAG = "${EXTRA_TAG}0"
+          EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_crowdsec_support }}" = 'true' ]; then
-          CADDY_STR = "$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \ \n"
-          EXTRA_TAG = "${EXTRA_TAG}1"
+          CADDY_STR="$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \ \n"
+          EXTRA_TAG="${EXTRA_TAG}1"
         else
-          EXTRA_TAG = "${EXTRA_TAG}0"
+          EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_waf_support }}" = 'true' ]; then
-          CADDY_STR = "$CADDY_STR     --with github.com/corazawaf/coraza-caddy \ \n"
-          EXTRA_TAG = "${EXTRA_TAG}1"
+          CADDY_STR="$CADDY_STR     --with github.com/corazawaf/coraza-caddy \ \n"
+          EXTRA_TAG="${EXTRA_TAG}1"
         else
-          EXTRA_TAG = "${EXTRA_TAG}0"
+          EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_layer4_support }}" = 'true' ]; then
-          CADDY_STR = "$CADDY_STR     --with github.com/mholt/caddy-l4 \ \n"
-          EXTRA_TAG = "${EXTRA_TAG}1"
+          CADDY_STR="$CADDY_STR     --with github.com/mholt/caddy-l4 \ \n"
+          EXTRA_TAG="${EXTRA_TAG}1"
         else
-          EXTRA_TAG = "${EXTRA_TAG}0"
+          EXTRA_TAG="${EXTRA_TAG}0"
         fi
         if [ "${{ github.event.inputs.is_tailscale_machine_support }}" = 'true' ]; then
-          CADDY_STR = "$CADDY_STR     --with github.com/tailscale/caddy-tailscale \ \n"
-          EXTRA_TAG = "${EXTRA_TAG}1"
+          CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale \ \n"
+          EXTRA_TAG="${EXTRA_TAG}1"
         else
-          EXTRA_TAG = "${EXTRA_TAG}0"
+          EXTRA_TAG="${EXTRA_TAG}0"
         fi
-        CADDY_STR = "$CADDY_STR     --github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
+        CADDY_STR="$CADDY_STR     --github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
         echo "XCADDY_STR=$CADDY_STR" >> $GITHUB_OUTPUT
         echo "extra_tag=$EXTRA_TAG" >> $GITHUB_OUTPUT
   
