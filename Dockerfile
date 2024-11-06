@@ -1,5 +1,6 @@
 ARG CADDY_VERSION=2.8.4
 ARG BUILD_TIME
+ARG XCADDY_STRING
 
 FROM caddy:${CADDY_VERSION}-builder AS builder
 
@@ -28,19 +29,34 @@ FROM caddy:${CADDY_VERSION}-builder AS builder
 # [08] https://github.com/mholt/caddy-l4
 # [09] https://github.com/tailscale/caddy-tailscale
 
-RUN xcaddy build \
-    --with github.com/caddy-dns/cloudflare \
-    --with github.com/WeidiDeng/caddy-cloudflare-ip \
-    --with github.com/zhangjiayin/caddy-geoip2 \
-    --with github.com/caddyserver/transform-encoder \
-    --with github.com/hslatman/caddy-crowdsec-bouncer \
-    --with github.com/corazawaf/coraza-caddy \
-    --with github.com/mholt/caddy-l4 \
-    --with github.com/tailscale/caddy-tailscale \
-#    --with github.com/hslatman/caddy-crowdsec-bouncer \
-#    --with github.com/hslatman/caddy-crowdsec-bouncer \
-    --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
+# RUN xcaddy build \
+#     --with github.com/caddy-dns/cloudflare \
+#     --with github.com/WeidiDeng/caddy-cloudflare-ip \
+#     --with github.com/zhangjiayin/caddy-geoip2 \
+#     --with github.com/caddyserver/transform-encoder \
+#     --with github.com/hslatman/caddy-crowdsec-bouncer \
+#     --with github.com/corazawaf/coraza-caddy \
+#     --with github.com/mholt/caddy-l4 \
+#     --with github.com/tailscale/caddy-tailscale \
+# #    --with github.com/hslatman/caddy-crowdsec-bouncer \
+# #    --with github.com/hslatman/caddy-crowdsec-bouncer \
+#     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-FROM caddy:${CADDY_VERSION}-alpine
+RUN xcaddy build \
+    "${XCADDY_STRING}"
+
+# --------------------------------------------------------
+
+# there is only alpine and windows based images.
+FROM caddy:${CADDY_IMAGE}-alpine 
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+
+# quality of life improvements
+RUN \
+	apk add --no-cache \
+	bash \
+	curl 
+COPY  support_files/.bashrc /root/.bashrc
+LABEL release-date=${BUILD_TIME}
+LABEL source="https://github.com/zorbaTheRainy/caddy"

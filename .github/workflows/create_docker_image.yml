@@ -14,22 +14,35 @@ on:
         description: 'Version of Caddy to build from'
         required: true
         default: '2.8.4'
-      extra_tag:
-        description: 'Tag to append to the verison number'
-        required: true
-        default: '8'
-      run_tests: 
-        description: 'Run tests' 
+      is_cloudflare_support: 
+        description: 'add Cloudflare support?' 
         required: true 
         type: boolean
-      option1: 
-        description: 'Option 1' 
+      is_geoip_support: 
+        description: 'add GeoIP support?' 
         required: true 
-        type: choice 
-        options: 
-          - Yes 
-          - No
-          
+        type: boolean
+      is_logging_template_support: 
+          description: 'add logging file templating support?' 
+          required: true 
+          type: boolean
+      is_crowdsec_support: 
+        description: 'add CrowdSec support?' 
+        required: true 
+        type: boolean
+      is_waf_support: 
+        description: 'add Web Application Firewall  support?' 
+        required: true 
+        type: boolean
+      is_layer4_support: 
+        description: 'add Layer 4 support?' 
+        required: true 
+        type: boolean
+      is_tailscale_machine_support: 
+        description: 'add Tailscale Machine support?' 
+        required: true 
+        type: boolean
+              
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,6 +56,58 @@ jobs:
         buildTime=$(date +%Y-%m-%d" "%X)
         echo "BUILD_TIME=$buildTime" >> $GITHUB_OUTPUT
 
+    - name: Create the `xcaddy build ` string
+      id: xcaddy
+      run: |
+        $CADDY_STR = ""
+        $EXTRA_TAG = ""
+        if [ "${{ github.event.inputs.is_cloudflare_support }}" = 'true' ]; then
+          $CADDY_STR = "$CADDY_STR     --with github.com/caddy-dns/cloudflare \"
+          $CADDY_STR = "$CADDY_STR     ----with github.com/WeidiDeng/caddy-cloudflare-ip \"
+          $EXTRA_TAG = "${EXTRA_TAG}11"
+        else
+          $EXTRA_TAG = "${EXTRA_TAG}00"
+        fi
+        if [ "${{ github.event.inputs.is_geoip_support }}" = 'true' ]; then
+          $CADDY_STR = "$CADDY_STR     --with github.com/zhangjiayin/caddy-geoip2 \"
+          $EXTRA_TAG = "${EXTRA_TAG}1"
+        else
+          $EXTRA_TAG = "${EXTRA_TAG}0"
+        fi
+        if [ "${{ github.event.inputs.is_logging_template_support }}" = 'true' ]; then
+          $CADDY_STR = "$CADDY_STR     --with github.com/caddyserver/transform-encoder \"
+          $EXTRA_TAG = "${EXTRA_TAG}1"
+        else
+          $EXTRA_TAG = "${EXTRA_TAG}0"
+        fi
+        if [ "${{ github.event.inputs.is_crowdsec_support }}" = 'true' ]; then
+          $CADDY_STR = "$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \"
+          $EXTRA_TAG = "${EXTRA_TAG}1"
+        else
+          $EXTRA_TAG = "${EXTRA_TAG}0"
+        fi
+        if [ "${{ github.event.inputs.is_waf_support }}" = 'true' ]; then
+          $CADDY_STR = "$CADDY_STR     --with github.com/corazawaf/coraza-caddy \"
+          $EXTRA_TAG = "${EXTRA_TAG}1"
+        else
+          $EXTRA_TAG = "${EXTRA_TAG}0"
+        fi
+        if [ "${{ github.event.inputs.is_layer4_support }}" = 'true' ]; then
+          $CADDY_STR = "$CADDY_STR     --with github.com/mholt/caddy-l4 \"
+          $EXTRA_TAG = "${EXTRA_TAG}1"
+        else
+          $EXTRA_TAG = "${EXTRA_TAG}0"
+        fi
+        if [ "${{ github.event.inputs.is_tailscale_machine_support }}" = 'true' ]; then
+          $CADDY_STR = "$CADDY_STR     --with github.com/tailscale/caddy-tailscale \"
+          $EXTRA_TAG = "${EXTRA_TAG}1"
+        else
+          $EXTRA_TAG = "${EXTRA_TAG}0"
+        fi
+        $CADDY_STR = "$CADDY_STR     --github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0"
+        echo "XCADDY_STR=$CADDY_STR" >> $GITHUB_OUTPUT
+        echo "extra_tag=$EXTRA_TAG" >> $GITHUB_OUTPUT
+  
     - name: Get release tag
       id: tag
       run: |
@@ -51,13 +116,13 @@ jobs:
           echo "GH_BUILD_TAG=$buildTag" >> $GITHUB_OUTPUT
           echo "GH_LATEST_TAG=testing" >> $GITHUB_OUTPUT
         elif [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
-          echo "GH_BUILD_TAG=${{ github.event.inputs.caddy_version }}-alpine-${{ github.event.inputs.extra_tag }}" >> $GITHUB_OUTPUT
+          echo "GH_BUILD_TAG=${{ github.event.inputs.caddy_version }}-alpine-${{ steps.xcaddy.outputs.extra_tag }}" >> $GITHUB_OUTPUT
           echo "GH_LATEST_TAG=latest" >> $GITHUB_OUTPUT
         else
           echo "Invalid base image specified" >&2
           exit 1
         fi
-
+  
     - name: Login to DockerHub
       uses: docker/login-action@v3 
       with:
@@ -76,11 +141,12 @@ jobs:
       with:
         context: .
         push: true
-        platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
-        # platforms: linux/arm64
+        # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
+        platforms: linux/arm64
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_BUILD_TAG }}
           ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_LATEST_TAG }}
         build-args: |
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
           CADDY_VERSION=${{ github.event.inputs.caddy_version }}
+          XCADDY_STRING=${{ steps.xcaddy.outputs.XCADDY_STR }}
