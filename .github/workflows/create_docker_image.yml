@@ -83,6 +83,7 @@ jobs:
         else
           EXTRA_TAG="${EXTRA_TAG}0"
         fi
+        EXTRA_TAG="${EXTRA_TAG}-"
         if [ "${{ github.event.inputs.is_crowdsec_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/hslatman/caddy-crowdsec-bouncer \ \n"
           EXTRA_TAG="${EXTRA_TAG}1"
@@ -126,8 +127,8 @@ jobs:
           exit 1
         fi
   
-    - name: Set platform var
-      id: platforms
+    - name: Set platform/repo var
+      id: docker_build_vars
       run: |
         if [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
           echo "PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6" >> $GITHUB_OUTPUT
@@ -157,10 +158,10 @@ jobs:
         push: true
         # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
         # platforms: linux/arm64
-        platforms: ${{ steps.platforms.outputs.PLATFORMS }}
+        platforms: ${{ steps.docker_build_vars.outputs.PLATFORMS }}
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/caddy:${{ steps.tag.outputs.GH_BUILD_TAG }}
-          ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.platforms.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_LATEST_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.docker_build_vars.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_BUILD_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.docker_build_vars.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_LATEST_TAG }}
         build-args: |
           BUILD_TIME=${{ steps.date.outputs.BUILD_TIME }}
           CADDY_VERSION=${{ github.event.inputs.caddy_version }}
