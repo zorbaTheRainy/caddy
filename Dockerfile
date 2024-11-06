@@ -42,8 +42,7 @@ FROM caddy:${CADDY_VERSION}-builder AS builder
 # #    --with github.com/hslatman/caddy-crowdsec-bouncer \
 #     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-RUN xcaddy build \
-    "${XCADDY_STRING}"
+RUN xcaddy build ${XCADDY_STRING}
 
 # --------------------------------------------------------
 
