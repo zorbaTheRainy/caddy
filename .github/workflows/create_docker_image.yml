@@ -91,13 +91,14 @@ jobs:
           EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_waf_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/corazawaf/coraza-caddy"
+          CADDY_STR="$CADDY_STR     --with github.com/corazawaf/coraza-caddy/v2"
           EXTRA_TAG="1${EXTRA_TAG}"
         else
           EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_layer4_support }}" == 'true' ]; then
           CADDY_STR="$CADDY_STR     --with github.com/mholt/caddy-l4"
+          CADDY_STR="$CADDY_STR     --with github.com/abiosoft/caddy-json-schema"
           EXTRA_TAG="1${EXTRA_TAG}"
         else
           EXTRA_TAG="0${EXTRA_TAG}"
