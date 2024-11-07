@@ -103,7 +103,7 @@ jobs:
           EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_tailscale_machine_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale"
+          CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscalee@0f105e89fbe2222c690b94b5b0b2a8150fa2540f"
           EXTRA_TAG="1${EXTRA_TAG}"
         else
           EXTRA_TAG="0${EXTRA_TAG}"
