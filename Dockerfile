@@ -43,6 +43,7 @@ ARG XCADDY_STRING
 FROM golang:1 AS builder
 RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 ENV XCADDY_SETCAP 0
+ARG CADDY_VERSION=2.8.4
 RUN xcaddy build v${CADDY_VERSION} --with github.com/tailscale/caddy-tailscale@main --output /usr/bin/caddy
 
 ARG XCADDY_STRING
