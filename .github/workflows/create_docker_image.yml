@@ -1,6 +1,6 @@
 name: Docker Image CI
 
-# For each project, modify the inputs, release tags, ARGs (at the very end), and anything at the top end of the file.
+# For each project: modify the inputs, release tags, ARGs (at the very end), and anything at the top end of the file.
 
 on:
   workflow_dispatch:
@@ -126,7 +126,7 @@ jobs:
       id: tag
       run: |
         if [ "${{ github.event.inputs.image_purpose }}" == "testing" ]; then
-          buildTag=$(date +%Y-%m-%d-%H-%M)
+          buildTag=$(date +%Y-%m-%d--%H-%M)
           echo "GH_BUILD_TAG=${{ steps.xcaddy.outputs.extra_tag }}-${buildTag}" >> $GITHUB_OUTPUT
           echo "GH_LATEST_TAG=testing" >> $GITHUB_OUTPUT
         elif [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
@@ -146,6 +146,8 @@ jobs:
           # echo "PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
           echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
         fi
+        # assume the DockerHub repository name is the same as the GitHub repository name
+        # GITHUB_REPOSITORY is <user>/<repo>, remove <user>
         REPOSITORY=${GITHUB_REPOSITORY##*/}
         echo "REPOSITORY_NAME=$REPOSITORY" >> $GITHUB_OUTPUT
   
