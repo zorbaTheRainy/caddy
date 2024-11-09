@@ -104,7 +104,8 @@ jobs:
           EXTRA_TAG="0${EXTRA_TAG}"
         fi
         if [ "${{ github.event.inputs.is_tailscale_machine_support }}" == 'true' ]; then
-          CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale@0f105e89fbe2222c690b94b5b0b2a8150fa2540f"
+          # CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale@0f105e89fbe2222c690b94b5b0b2a8150fa2540f"
+          CADDY_STR="$CADDY_STR     --with github.com/tailscale/caddy-tailscale@main"
           EXTRA_TAG="1${EXTRA_TAG}"
         else
           EXTRA_TAG="0${EXTRA_TAG}"
@@ -137,8 +138,8 @@ jobs:
         if [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
           echo "PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6" >> $GITHUB_OUTPUT
         else
-          # echo "PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
-          echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
+          echo "PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
+          # echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
         fi
         REPOSITORY=${GITHUB_REPOSITORY##*/}
         echo "REPOSITORY_NAME=$REPOSITORY" >> $GITHUB_OUTPUT
