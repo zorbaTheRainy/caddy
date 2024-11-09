@@ -37,11 +37,19 @@ ARG XCADDY_STRING
 #     --with github.com/caddy-dns/cloudflare \
 #     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-FROM caddy:${CADDY_VERSION}-builder AS builder
+# FROM caddy:${CADDY_VERSION}-builder AS builder
 
-ARG XCADDY_STRING
-RUN xcaddy build ${XCADDY_STRING}
+# ARG XCADDY_STRING
+# RUN xcaddy build ${XCADDY_STRING}
 # caddy list-modules --packages --versions
+
+FROM golang:1 AS builder
+RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+ENV XCADDY_SETCAP 0
+ARG XCADDY_STRING
+ARG CADDY_VERSION
+RUN xcaddy build v${CADDY_VERSION} ${XCADDY_STRING} --output /usr/bin/caddy
+
 
 
 # --------------------------------------------------------
