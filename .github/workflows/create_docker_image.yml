@@ -1,5 +1,7 @@
 name: Docker Image CI
 
+# For each project, modify the inputs, release tags, ARGs (at the very end), and anything at the top end of the file.
+
 on:
   workflow_dispatch:
     inputs:
@@ -51,12 +53,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-
-    - name: Run date command
-      id: date
-      run: |
-        buildTime=$(date +%Y-%m-%d" "%X)
-        echo "BUILD_TIME=$buildTime" >> $GITHUB_OUTPUT
 
     - name: Create the `xcaddy build` string
       id: xcaddy
@@ -117,6 +113,15 @@ jobs:
         echo "XCADDY_STR=$CADDY_STR" >> $GITHUB_OUTPUT
         echo "extra_tag=$EXTRA_TAG" >> $GITHUB_OUTPUT
   
+# -----------------------------------------------------
+# Aside from the Release tag, pretty standard here on out.
+    - name: Run date command
+      id: date
+      run: |
+        buildTime=$(date +%Y-%m-%d" "%X)
+        echo "BUILD_TIME=$buildTime" >> $GITHUB_OUTPUT
+
+    # modify me!
     - name: Get release tag
       id: tag
       run: |
@@ -138,8 +143,8 @@ jobs:
         if [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
           echo "PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6" >> $GITHUB_OUTPUT
         else
-          echo "PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
-          # echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
+          # echo "PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
+          echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
         fi
         REPOSITORY=${GITHUB_REPOSITORY##*/}
         echo "REPOSITORY_NAME=$REPOSITORY" >> $GITHUB_OUTPUT
@@ -162,8 +167,6 @@ jobs:
       with:
         context: .
         push: true
-        # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
-        # platforms: linux/arm64
         platforms: ${{ steps.docker_build_vars.outputs.PLATFORMS }}
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.docker_build_vars.outputs.REPOSITORY_NAME }}:${{ steps.tag.outputs.GH_BUILD_TAG }}

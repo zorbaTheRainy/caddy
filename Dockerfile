@@ -33,16 +33,17 @@ ARG XCADDY_STRING
 		# http.reverse_proxy.transport.tailscale
 		# tailscale
 
+
+# FROM caddy:${CADDY_VERSION}-builder AS builder
+# ARG XCADDY_STRING
+# RUN xcaddy build ${XCADDY_STRING}
+
 # RUN xcaddy build \
 #     --with github.com/caddy-dns/cloudflare \
 #     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-# FROM caddy:${CADDY_VERSION}-builder AS builder
-
-# ARG XCADDY_STRING
-# RUN xcaddy build ${XCADDY_STRING}
-# caddy list-modules --packages --versions
-
+# The Taiscale module needs the latest veriosn of go, which cadd-builder does not use.
+# So, we will build this a bit more manually.
 FROM golang:1 AS builder
 RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 ENV XCADDY_SETCAP 0
@@ -50,6 +51,7 @@ ARG XCADDY_STRING
 ARG CADDY_VERSION
 RUN xcaddy build v${CADDY_VERSION} ${XCADDY_STRING} --output /usr/bin/caddy
 
+# caddy list-modules --packages --versions
 
 
 # --------------------------------------------------------
@@ -63,6 +65,7 @@ COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 RUN \
 	apk add --no-cache \
 	bash \
+	nano \
 	curl 
 COPY  support_files/.bashrc /root/.bashrc
 
