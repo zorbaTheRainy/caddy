@@ -2,11 +2,8 @@ ARG CADDY_VERSION=2.8.4
 ARG BUILD_TIME
 ARG XCADDY_STRING
 
-# FROM caddy:${CADDY_VERSION}-builder AS builder
-
 # ------------------------------------------------------------------
-# Modules provided
-# Bitflag in tag read right-to-left (i.e.,  8765-4321, 0000-1011)
+# Modules required
 # ------------------------------------------------------------------
 # [__] https://github.com/hairyhenderson/caddy-teapot-module
 		# http.handlers.teapot
@@ -40,14 +37,10 @@ ARG XCADDY_STRING
 #     --with github.com/caddy-dns/cloudflare \
 #     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-FROM golang:1 AS builder
-RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
-ENV XCADDY_SETCAP 0
-ARG CADDY_VERSION=2.8.4
-RUN xcaddy build v${CADDY_VERSION} --with github.com/tailscale/caddy-tailscale@main --output /usr/bin/caddy
+FROM caddy:${CADDY_VERSION}-builder AS builder
 
 ARG XCADDY_STRING
-# RUN xcaddy build ${XCADDY_STRING}
+RUN xcaddy build ${XCADDY_STRING}
 # caddy list-modules --packages --versions
 
 
