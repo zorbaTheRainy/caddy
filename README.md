@@ -36,7 +36,7 @@ Describe the purpose of each bit position and what it represents.
 | 5 | [coraza-caddy](https://github.com/corazawaf/coraza-caddy) <br>  Caddy Module provides Web Application Firewall capabilities for Caddy, OWASP Corazaia OWASP Coraza |
 | 6 |  [Layer 4](https://github.com/mholt/caddy-l4) <br>  An experimental layer 4 app for Caddy. It facilitates composable handling of raw TCP/UDP connections based on properties of the connection or the beginning of the stream. <br> [caddy-json-schema](https://github.com/abiosoft/caddy-json-schema) <br> JSON schema generator for Caddy v2.  <br> The generated schema can be integrated with editors for intellisense and better experience with configuration and plugin development. |
 | 7 | [caddy-tailscale](https://github.com/tailscale/caddy-tailscale) <br> Allows running a Tailscale node directly inside of the Caddy web server. This allows a caddy server to join your Tailscale network directly without needing a separate Tailscale client. |
-| Always installed | [teapot](https://github.com/hairyhenderson/caddy-teapot-module) <br> Its only purpose is to respond with 418 I'm a teapot to every request. |
+| Always installed | [teapot](https://github.com/hairyhenderson/caddy-teapot-module) <br> Its only purpose is to respond with `418 I'm a teapot` to every request. |
 
 Read the bit-flag right-to-left (e.g., 7654-3210).  For example, the bit-falg 1011-1000 means that bits 3, 4, 5, and 7 are set.
 
@@ -51,7 +51,6 @@ Read the bit-flag right-to-left (e.g., 7654-3210).  For example, the bit-falg 10
 | `2.8.4-alpine-0000-0000` | 0000-0000 | No extra modules, except `teapot`.  <br> No reason to use this over the official `caddy` image (aside from the additonal install of `bash`, `nano`, and `teapot`) | Production image, based on caddy 2.8.4 |
 
 
-![logo](https://raw.githubusercontent.com/docker-library/docs/7f3881a28c29ed29bb1a38681b95bd785a8a6da5/logo.png)
 
 # What is Caddy?
 
