@@ -141,7 +141,9 @@ jobs:
       id: docker_build_vars
       run: |
         if [ "${{ github.event.inputs.image_purpose }}" == "production" ]; then
-          echo "PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6" >> $GITHUB_OUTPUT
+          # echo "PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6" >> $GITHUB_OUTPUT
+          # golang can't handle linux/arm/v6
+          echo "PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7" >> $GITHUB_OUTPUT
         else
           # echo "PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
           echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
