@@ -1,84 +1,57 @@
-<!--
+# Fork-ish
 
-********************************************************************************
+This is yet another custom build of Caddy, the reverse proxy.
 
-WARNING:
+It creates a version of Caddy that can <b>*not*</b> be downloaded from [Caddy Download](https://caddyserver.com/download) 
 
-    DO NOT EDIT "caddy/README.md"
+Annoying, I know. It is the Tailscale module.  Tailscale requires being built directly from the image `golang` instead of `caddy:2.8.4-builder` as that does't include the latest vesion of `go`, which Tailscale itself requires.
 
-    IT IS AUTO-GENERATED
+Since I went to the trouble of building the image, I added `bash`, `nano`, and `curl`; and a simple `.bashrc`.
 
-    (from the other files in "caddy/" combined with a set of templates)
-
-********************************************************************************
-
--->
-
-# Quick reference
-
--	**Maintained by**:  
-	[the Caddy Docker Maintainers](https://github.com/caddyserver/caddy-docker)
-
--	**Where to get help**:  
-	[the Caddy Community Forums](https://caddy.community)
-
-# Supported tags and respective `Dockerfile` links
-
-(See ["What's the difference between 'Shared' and 'Simple' tags?" in the FAQ](https://github.com/docker-library/faq#whats-the-difference-between-shared-and-simple-tags).)
+# Tags
 
 ## Simple Tags
 
--	[`2.8.4-alpine`, `2.8-alpine`, `2-alpine`, `alpine`](https://github.com/caddyserver/caddy-docker/blob/645721b4b87b6c3a692641213853ce064eb82fe2/2.8/alpine/Dockerfile)
+Tags come in 2 general varies: Testing & Production (a.k.a "latest").
 
--	[`2.8.4-builder-alpine`, `2.8-builder-alpine`, `2-builder-alpine`, `builder-alpine`](https://github.com/caddyserver/caddy-docker/blob/645721b4b87b6c3a692641213853ce064eb82fe2/2.8/builder/Dockerfile)
+The main difference is (a) the platforms (e.g., amd64) I spend time building for, and (b) the chance that the imgae will be functional.
 
--	[`2.8.4-windowsservercore-1809`, `2.8-windowsservercore-1809`, `2-windowsservercore-1809`, `windowsservercore-1809`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows/1809/Dockerfile)
+* `testing`: Includes lesser tags values that state the datestamp (%Y-%m-%d--%H-%M) when the image was built.
+* `latest`: Includes the `caddy` image from which this build is derived (e.g. 2,8.4-alpine). I do not make any Windows images, and Caddy only builds their Linux images on Alpine.
 
--	[`2.8.4-windowsservercore-ltsc2022`, `2.8-windowsservercore-ltsc2022`, `2-windowsservercore-ltsc2022`, `windowsservercore-ltsc2022`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows/ltsc2022/Dockerfile)
+## Bit flagged Tags
 
--	[`2.8.4-builder-windowsservercore-1809`, `2.8-builder-windowsservercore-1809`, `2-builder-windowsservercore-1809`, `builder-windowsservercore-1809`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows-builder/1809/Dockerfile)
+The image tags (aside from "testing" and "latest") include a bit-flag that lets you know what modules have been added to the base `caddy` program.
 
--	[`2.8.4-builder-windowsservercore-ltsc2022`, `2.8-builder-windowsservercore-ltsc2022`, `2-builder-windowsservercore-ltsc2022`, `builder-windowsservercore-ltsc2022`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows-builder/ltsc2022/Dockerfile)
+### Bit Positions and Meanings
 
-## Shared Tags
+Describe the purpose of each bit position and what it represents.
 
--	`2.8.4`, `2.8`, `2`, `latest`:
+| Bit Position | Meaning |
+| ------------ | ------- |
+| 0 & 1| [caddy-dns/cloudflare](https://github.com/caddy-dns/cloudflare) <br>This package contains a DNS provider module for Caddy. It can be used to manage DNS records with Cloudflare accounts. <br> [caddy-cloudflare-ip](https://github.com/WeidiDeng/caddy-cloudflare-ip) <br> This module retrieves cloudflare ips from their offical website\, ipv4 and ipv6\. It is supported from caddy v2\.6\.3 onwards. |
+| 2 | [caddy-geoip2](https://github.com/zhangjiayin/caddy-geoip2) <br> Provides middleware for resolving a users IP address against the Maxmind Geo IP Database.|
+| 3 | [transform-encoder](https://github.com/caddyserver/transform-encoder) <br> This module adds logging encoder named transform. The module accepts a template with the placeholders are surrounded by braces {} and filled by values extracted from the stucture of the JSON log encoder. |
+| 4 | [caddy-crowdsec-bouncer](https://github.com/hslatman/caddy-crowdsec-bouncer) <br> A Caddy module that blocks malicious traffic based on decisions made by CrowdSec.|
+| 5 | [coraza-caddy](https://github.com/corazawaf/coraza-caddy) <br>  Caddy Module provides Web Application Firewall capabilities for Caddy, OWASP Corazaia OWASP Coraza |
+| 6 |  [Layer 4](https://github.com/mholt/caddy-l4) <br>  An experimental layer 4 app for Caddy. It facilitates composable handling of raw TCP/UDP connections based on properties of the connection or the beginning of the stream. <br> [caddy-json-schema](https://github.com/abiosoft/caddy-json-schema) <br> JSON schema generator for Caddy v2.  <br> The generated schema can be integrated with editors for intellisense and better experience with configuration and plugin development. |
+| 7 | [caddy-tailscale](https://github.com/tailscale/caddy-tailscale) <br> Allows running a Tailscale node directly inside of the Caddy web server. This allows a caddy server to join your Tailscale network directly without needing a separate Tailscale client. |
+| Always installed | [teapot](https://github.com/hairyhenderson/caddy-teapot-module) <br> Its only purpose is to respond with 418 I'm a teapot to every request. |
 
-	-	[`2.8.4-alpine`](https://github.com/caddyserver/caddy-docker/blob/645721b4b87b6c3a692641213853ce064eb82fe2/2.8/alpine/Dockerfile)
-	-	[`2.8.4-windowsservercore-1809`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows/1809/Dockerfile)
-	-	[`2.8.4-windowsservercore-ltsc2022`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows/ltsc2022/Dockerfile)
+Read the bit-flag right-to-left (e.g., 7654-3210).  For example, the bit-falg 1011-1000 means that bits 3, 4, 5, and 7 are set.
 
--	`2.8.4-builder`, `2.8-builder`, `2-builder`, `builder`:
 
-	-	[`2.8.4-builder-alpine`](https://github.com/caddyserver/caddy-docker/blob/645721b4b87b6c3a692641213853ce064eb82fe2/2.8/builder/Dockerfile)
-	-	[`2.8.4-builder-windowsservercore-1809`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows-builder/1809/Dockerfile)
-	-	[`2.8.4-builder-windowsservercore-ltsc2022`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows-builder/ltsc2022/Dockerfile)
+### Example tags
 
--	`2.8.4-windowsservercore`, `2.8-windowsservercore`, `2-windowsservercore`, `windowsservercore`:
+| Full tag | Bit flag portion | Flags Set | Other Meaning |
+| ------------- | --------------------- | --------- | --------- |
+| `2.8.4-alpine-1100-1011` | 1100-1011 | Cloudflare (both DNS & IP), Log encoder, Layer 4, and Tailscale | Production image, based on caddy 2.8.4 |
+| `0000-1011-2024-11-09--20-27` | 0000-1011 | Cloudflare (both DNS & IP), Log encoder| Testing image, built on Nov 9, 2024 at 20:07 UTC |
+| `2.8.4-alpine-1111-1111` | 1111-1111  | Everything above | Production image, based on caddy 2.8.4 |
+| `2.8.4-alpine-0000-0000` | 0000-0000 | No extra modules, except `teapot`.  <br> No reason to use this over the official `caddy` image (aside from the additonal install of `bash`, `nano`, and `teapot`) | Production image, based on caddy 2.8.4 |
 
-	-	[`2.8.4-windowsservercore-1809`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows/1809/Dockerfile)
-	-	[`2.8.4-windowsservercore-ltsc2022`](https://github.com/caddyserver/caddy-docker/blob/fb6e8723745c60fe413a311b484704e8ce3fcfd3/2.8/windows/ltsc2022/Dockerfile)
 
-# Quick reference (cont.)
-
--	**Where to file issues**:  
-	[https://github.com/caddyserver/caddy-docker/issues](https://github.com/caddyserver/caddy-docker/issues?q=)
-
--	**Supported architectures**: ([more info](https://github.com/docker-library/official-images#architectures-other-than-amd64))  
-	[`amd64`](https://hub.docker.com/r/amd64/caddy/), [`arm32v6`](https://hub.docker.com/r/arm32v6/caddy/), [`arm32v7`](https://hub.docker.com/r/arm32v7/caddy/), [`arm64v8`](https://hub.docker.com/r/arm64v8/caddy/), [`ppc64le`](https://hub.docker.com/r/ppc64le/caddy/), [`riscv64`](https://hub.docker.com/r/riscv64/caddy/), [`s390x`](https://hub.docker.com/r/s390x/caddy/), [`windows-amd64`](https://hub.docker.com/r/winamd64/caddy/)
-
--	**Published image artifact details**:  
-	[repo-info repo's `repos/caddy/` directory](https://github.com/docker-library/repo-info/blob/master/repos/caddy) ([history](https://github.com/docker-library/repo-info/commits/master/repos/caddy))  
-	(image metadata, transfer size, etc)
-
--	**Image updates**:  
-	[official-images repo's `library/caddy` label](https://github.com/docker-library/official-images/issues?q=label%3Alibrary%2Fcaddy)  
-	[official-images repo's `library/caddy` file](https://github.com/docker-library/official-images/blob/master/library/caddy) ([history](https://github.com/docker-library/official-images/commits/master/library/caddy))
-
--	**Source of this description**:  
-	[docs repo's `caddy/` directory](https://github.com/docker-library/docs/tree/master/caddy) ([history](https://github.com/docker-library/docs/commits/master/caddy))
-
-![logo](https://raw.githubusercontent.com/docker-library/docs/7f3881a28c29ed29bb1a38681b95bd785a8a6da5/caddy/logo.png)
+![logo](https://raw.githubusercontent.com/docker-library/docs/7f3881a28c29ed29bb1a38681b95bd785a8a6da5/logo.png)
 
 # What is Caddy?
 
@@ -104,10 +77,10 @@ Note that named volumes are persisted across container restarts and terminations
 
 The default config file simply serves files from `/usr/share/caddy`, so if you want to serve `index.html` from the current working directory:
 
-```console
+``` console
 $ echo "hello world" > index.html
 $ docker run -d -p 80:80 \
-    -v $PWD/index.html:/usr/share/caddy/index.html \
+    -v $PWD/index.html:/usr/share/index.html \
     -v caddy_data:/data \
     caddy
 ...
@@ -115,11 +88,11 @@ $ curl http://localhost/
 hello world
 ```
 
-To override the default [`Caddyfile`](https://github.com/caddyserver/dist/blob/master/config/Caddyfile), you can mount a new one at `/etc/caddy/Caddyfile`:
+To override the default [`Caddyfile`](https://github.com/caddyserver/dist/blob/master/config/Caddyfile), you can mount a new one at `/etc/Caddyfile`:
 
-```console
+``` console
 $ docker run -d -p 80:80 \
-    -v $PWD/Caddyfile:/etc/caddy/Caddyfile \
+    -v $PWD/Caddyfile:/etc/Caddyfile \
     -v caddy_data:/data \
     caddy
 ```
@@ -128,7 +101,7 @@ $ docker run -d -p 80:80 \
 
 The default `Caddyfile` only listens to port `80`, and does not set up automatic TLS. However, if you have a domain name for your site, and its A/AAAA DNS records are properly pointed to this machine's public IP, then you can use this command to simply serve a site over HTTPS:
 
-```console
+``` console
 $ docker run -d --cap-add=NET_ADMIN -p 80:80 -p 443:443 -p 443:443/udp \
     -v /site:/srv \
     -v caddy_data:/data \
@@ -144,11 +117,11 @@ See [Caddy's docs](https://caddyserver.com/docs/automatic-https) for more inform
 
 Most users deploying production sites will not want to rely on mounting files into a container, but will instead base their own images on `caddy`:
 
-```Dockerfile
+``` Dockerfile
 # note: never use the :latest tag in a production site
 FROM caddy:<version>
 
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY Caddyfile /etc/Caddyfile
 COPY site /srv
 ```
 
@@ -158,7 +131,7 @@ Caddy is extendable through the use of "modules". See https://caddyserver.com/do
 
 You can use the `:builder` image as a short-cut to building a new Caddy binary:
 
-```Dockerfile
+``` Dockerfile
 FROM caddy:<version>-builder AS builder
 
 RUN xcaddy build \
@@ -172,9 +145,9 @@ COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
 Note the second `FROM` instruction - this produces a much smaller image by simply overlaying the newly-built binary on top of the regular `caddy` image.
 
-The [`xcaddy`](https://caddyserver.com/docs/build#xcaddy) tool is used to [build a new Caddy entrypoint](https://github.com/caddyserver/caddy/blob/4217217badf220d7d2c25f43f955fdc8454f2c64/cmd/caddy/main.go#L15..L25), with the provided modules. You can specify just a module name, or a name with a version (separated by `@`). You can also specify a specific version (can be a version tag or commit hash) of Caddy to build from. Read more about [`xcaddy` usage](https://github.com/caddyserver/xcaddy#command-usage).
+The [`xcaddy`](https://caddyserver.com/docs/build#xcaddy) tool is used to [build a new Caddy entrypoint](https://github.com/caddyserver/blob/4217217badf220d7d2c25f43f955fdc8454f2c64/cmd/main.go#L15..L25), with the provided modules. You can specify just a module name, or a name with a version (separated by `@`). You can also specify a specific version (can be a version tag or commit hash) of Caddy to build from. Read more about [`xcaddy` usage](https://github.com/caddyserver/xcaddy#command-usage).
 
-Note that the "standard" Caddy modules ([`github.com/caddyserver/caddy/master/modules/standard`](https://github.com/caddyserver/caddy/tree/master/modules/standard)) are always included.
+Note that the "standard" Caddy modules ([`github.com/caddyserver/master/modules/standard`](https://github.com/caddyserver/tree/master/modules/standard)) are always included.
 
 ### Graceful reloads
 
@@ -184,7 +157,7 @@ When running Caddy in Docker, the recommended way to trigger a config reload is 
 
 First, you'll need to determine your container ID or name. Then, pass the container ID to `docker exec`. The working directory is set to `/etc/caddy` so Caddy can find your Caddyfile without additional arguments.
 
-```console
+``` console
 $ caddy_container_id=$(docker ps | grep caddy | awk '{print $1;}')
 $ docker exec -w /etc/caddy $caddy_container_id caddy reload
 ```
@@ -201,7 +174,7 @@ See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for more details.
 
 If you prefer to use `docker-compose` to run your stack, here's a sample service definition.
 
-```yaml
+``` yaml
 version: "3.7"
 
 services:
@@ -215,7 +188,7 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/Caddyfile:/etc/Caddyfile
       - $PWD/site:/srv
       - caddy_data:/data
       - caddy_config:/config
@@ -238,7 +211,7 @@ This is the defacto image. If you are unsure about what your needs are, you prob
 
 ## `caddy:<version>-alpine`
 
-This image is based on the popular [Alpine Linux project](https://alpinelinux.org), available in [the `alpine` official image](https://hub.docker.com/_/alpine). Alpine Linux is much smaller than most distribution base images (~5MB), and thus leads to much slimmer images in general.
+This image is based on the popular [Alpine Linux project](https://alpinelinux.org), available in [the `alpine` official image](https://hub.docker.com/_/alpine). Alpine Linux is much smaller than most distribution base images (\~5MB), and thus leads to much slimmer images in general.
 
 This variant is useful when final image size being as small as possible is your primary concern. The main caveat to note is that it does use [musl libc](https://musl.libc.org) instead of [glibc and friends](https://www.etalabs.net/compare_libcs.html), so software will often run into issues depending on the depth of their libc requirements/assumptions. See [this Hacker News comment thread](https://news.ycombinator.com/item?id=10782897) for more discussion of the issues that might arise and some pro/con comparisons of using Alpine-based images.
 
@@ -250,15 +223,15 @@ This image is based on [Windows Server Core (`microsoft/windowsservercore`)](htt
 
 For information about how to get Docker running on Windows, please see the relevant "Quick Start" guide provided by Microsoft:
 
--	[Windows Server Quick Start](https://msdn.microsoft.com/en-us/virtualization/windowscontainers/quick_start/quick_start_windows_server)
--	[Windows 10 Quick Start](https://msdn.microsoft.com/en-us/virtualization/windowscontainers/quick_start/quick_start_windows_10)
+* [Windows Server Quick Start](https://msdn.microsoft.com/en-us/virtualization/windowscontainers/quick_start/quick_start_windows_server)
+* [Windows 10 Quick Start](https://msdn.microsoft.com/en-us/virtualization/windowscontainers/quick_start/quick_start_windows_10)
 
 # License
 
-View [license information](https://github.com/caddyserver/caddy/blob/master/LICENSE) for the software contained in this image.
+View [license information](https://github.com/caddyserver/blob/master/LICENSE) for the software contained in this image.
 
 As with all Docker images, these likely also contain other software which may be under other licenses (such as Bash, etc from the base distribution, along with any direct or indirect dependencies of the primary software being contained).
 
-Some additional license information which was able to be auto-detected might be found in [the `repo-info` repository's `caddy/` directory](https://github.com/docker-library/repo-info/tree/master/repos/caddy).
+Some additional license information which was able to be auto-detected might be found in [the `repo-info` repository's directory](https://github.com/docker-library/repo-info/tree/master/repos/caddy).
 
 As for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licenses for all software contained within.

@@ -42,7 +42,7 @@ ARG XCADDY_STRING
 #     --with github.com/caddy-dns/cloudflare \
 #     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-# The Taiscale module needs the latest veriosn of go, which cadd-builder does not use.
+# The Tailscale module needs the latest veriosn of go, which caddy-builder does not use.
 # So, we will build this a bit more manually.
 FROM golang:1 AS builder
 RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
