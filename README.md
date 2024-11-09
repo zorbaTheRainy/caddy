@@ -14,7 +14,7 @@ Since I went to the trouble of building the image, I added `bash`, `nano`, and `
 
 Tags come in 2 general varies: Testing & Production (a.k.a "latest").
 
-The main difference is (a) the platforms (e.g., amd64) I spend time building for, and (b) the chance that the imgae will be functional.
+The main difference is (a) the platforms I spend time building for (e.g., amd64), and (b) the chance that the imgae will be functional.
 
 * `testing`: Includes lesser tags values that state the datestamp (%Y-%m-%d--%H-%M) when the image was built.
 * `latest`: Includes the `caddy` image from which this build is derived (e.g. 2,8.4-alpine). I do not make any Windows images, and Caddy only builds their Linux images on Alpine.
@@ -38,7 +38,7 @@ Describe the purpose of each bit position and what it represents.
 | 7 | [caddy-tailscale](https://github.com/tailscale/caddy-tailscale) <br> Allows running a Tailscale node directly inside of the Caddy web server. This allows a caddy server to join your Tailscale network directly without needing a separate Tailscale client. |
 | Always installed | [teapot](https://github.com/hairyhenderson/caddy-teapot-module) <br> Its only purpose is to respond with `418 I'm a teapot` to every request. |
 
-Read the bit-flag right-to-left (e.g., 7654-3210).  For example, the bit-falg 1011-1000 means that bits 3, 4, 5, and 7 are set.
+Read the bit-flag from right-to-left (e.g., 7654-3210).  For example, the bit-flag 1011-1000 means that bits 3, 4, 5, and 7 are set.
 
 
 ### Example tags
